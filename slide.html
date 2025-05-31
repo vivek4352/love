@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Love Story - Vivek & Ishika</title>
+  <style>
+    /* [Previous CSS remains exactly the same] */
+    /* ... */
+  </style>
+</head>
+<body>
+  <!-- [All previous HTML structure remains the same until the script section] -->
+  <!-- ... -->
+
+  <script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const heart = document.getElementById('backgroundHeart');
+    const music = document.getElementById('bg-music');
+    const musicControl = document.getElementById('musicControl');
+    const bgImagesContainer = document.getElementById('backgroundImages');
+    let isMusicPlaying = false;
+    const totalImages = 35;
+    const imagesPerSlide = 6;
+    let rotatingImages = [];
+
+    // Initialize rotating images
+    function initRotatingImages() {
+      // Clear any existing images
+      bgImagesContainer.innerHTML = '';
+      rotatingImages = [];
+      
+      for (let i = 0; i < imagesPerSlide; i++) {
+        const img = document.createElement('img');
+        img.className = 'rotating-image';
+        img.alt = `Our memory ${i+1}`;
+        img.style.display = 'none';
+        img.onerror = function() {
+          this.style.display = 'none'; // Hide if image fails to load
+        };
+        bgImagesContainer.appendChild(img);
+        rotatingImages.push(img);
+      }
+      updateBackgroundImages();
+      startImageRotation();
+    }
+
+    // Update background images based on current slide
+    function updateBackgroundImages() {
+      const startImgIndex = (current * Math.floor(totalImages/slides.length)) % totalImages;
+      
+      rotatingImages.forEach((img, index) => {
+        const imgNumber = (startImgIndex + index) % totalImages + 1;
+        img.src = `slide ${imgNumber}.jpg`;
+        img.style.display = 'block';
+        img.style.opacity = '0';
+        
+        // Fade in the new image
+        setTimeout(() => {
+          img.style.opacity = '0.7';
+        }, 50);
+      });
+    }
+
+    // Animate images in circular paths with varied speeds
+    function startImageRotation() {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
+      
+      function animate() {
+        const time = Date.now() / 2000; // Base time
+        
+        rotatingImages.forEach((img, i) => {
+          // Each image has slightly different speed and radius
+          const speed = 0.3 + (i * 0.05);
+          const individualRadius = radius * (0.8 + (i * 0.05));
+          const angle = (i * (2 * Math.PI / imagesPerSlide)) + (time * speed);
+          
+          const x = centerX + Math.cos(angle) * individualRadius;
+          const y = centerY + Math.sin(angle) * individualRadius;
+          const scale = 0.7 + Math.sin(angle * 3) * 0.3;
+          const rotation = angle * (180/Math.PI);
+          
+          img.style.transform = `
+            translate(${x - 75}px, ${y - 75}px) 
+            scale(${scale}) 
+            rotate(${rotation}deg)
+          `;
+          img.style.zIndex = Math.floor(scale * 10);
+        });
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    // [All other functions remain the same as before]
+    // ...
+
+    // Initialize
+    initRotatingImages();
+    updateSlideIndicator();
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Enable music after first interaction
+    document.body.addEventListener('click', function initMusic() {
+      if (!isMusicPlaying) {
+        music.play().catch(e => console.log('Autoplay prevented:', e));
+        isMusicPlaying = true;
+        musicControl.textContent = '❚❚';
+      }
+      document.body.removeEventListener('click', initMusic);
+    }, { once: true });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      startImageRotation();
+    });
+
+    // Preload images for smoother transitions
+    function preloadImages() {
+      for (let i = 1; i <= totalImages; i++) {
+        const img = new Image();
+        img.src = `slide ${i}.jpg`;
+      }
+    }
+    
+    // Start preloading after initial render
+    setTimeout(preloadImages, 1000);
+  </script>
+</body>
+</html>
