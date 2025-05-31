@@ -16,23 +16,29 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-x: hidden;
       position: relative;
-      padding-top: 200px;
+      padding: 200px 20px 50px;
     }
-    .background-image {
+    .background-images {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
       z-index: -1;
-      opacity: 0.25; /* subtle background */
-      transition: background-image 0.5s ease-in-out;
+      overflow: hidden;
+    }
+    .rotating-image {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
     }
     .background-heart {
       position: absolute;
@@ -49,7 +55,7 @@
       transform: translate(-50%, -50%) scale(1);
     }
     .container {
-      background: white;
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 50px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       width: 90%;
@@ -58,6 +64,7 @@
       text-align: center;
       z-index: 1;
       position: relative;
+      backdrop-filter: blur(5px);
     }
     .title-banner {
       position: fixed;
@@ -73,6 +80,7 @@
       box-shadow: 0 0 15px #ff69b4;
       animation: shine 2s infinite ease-in-out;
       z-index: 10;
+      white-space: nowrap;
     }
     .clock {
       position: fixed;
@@ -88,6 +96,7 @@
       color: #d63384;
       box-shadow: 0 0 10px #f48fb1;
       z-index: 9;
+      text-align: center;
     }
     @keyframes shine {
       0%, 100% {
@@ -109,12 +118,18 @@
       margin-bottom: 1rem;
     }
     .slide p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #444;
       line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1.5rem;
     }
     button {
-      margin-top: 2rem;
       padding: 0.6rem 1.5rem;
       font-size: 1rem;
       background: #d63384;
@@ -122,9 +137,17 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
     button:hover {
       background: #b02a6b;
+      transform: translateY(-2px);
+    }
+    button.secondary {
+      background: #f48fb1;
+    }
+    button.secondary:hover {
+      background: #d81b60;
     }
     .confetti {
       position: absolute;
@@ -143,6 +166,39 @@
       background-color: #f06292;
       animation: fall 2s linear infinite;
     }
+    .slide-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 1.5rem;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f48fb1;
+      cursor: pointer;
+    }
+    .dot.active {
+      background: #d63384;
+      transform: scale(1.2);
+    }
+    .music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #d63384;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -151,12 +207,24 @@
       0% { transform: translateY(-100%); }
       100% { transform: translateY(100vh); }
     }
+    @media (max-width: 500px) {
+      .title-banner {
+        font-size: 1.2rem;
+        padding: 0.8rem 1.5rem;
+      }
+      .clock {
+        font-size: 0.9rem;
+        width: 90%;
+      }
+      .rotating-image {
+        width: 100px;
+        height: 100px;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- Background image container -->
-  <div id="backgroundImage" class="background-image"></div>
-
+  <div class="background-images" id="backgroundImages"></div>
   <div class="background-heart" id="backgroundHeart">❤️</div>
 
   <div class="title-banner">💖 Happy 3rd Anniversary, Ishika! 💖</div>
@@ -166,60 +234,218 @@
     <div class="slide active">
       <h2>Hi Ishika ❤️</h2>
       <p>This is something special for you... A little journey of us, one slide at a time 🥰</p>
-      <button onclick="nextSlide()">Next</button>
+      <div class="btn-group">
+        <button onclick="nextSlide()">Next</button>
+      </div>
+      <div class="slide-indicator">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+      </div>
     </div>
     <div class="slide">
       <h2>Our Beginning</h2>
-      <p>It all began on 31st May 2022... the day you proposed to me ❤️(chalo aj apne best friend ko sabhi propros kro dekhte he unka answer kya Hota he) I Love U </p>
-      <button onclick="nextSlide()">Next</button>
+      <p>It all began on 31st May 2022... the day you proposed to me ❤️</p>
+      <p>(chalo aj apne best friend ko sabhi propros kro dekhte he unka answer kya Hota he) I Love U</p>
+      <div class="btn-group">
+        <button class="secondary" onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+      <div class="slide-indicator">
+        <div class="dot" onclick="goToSlide(0)"></div>
+        <div class="dot active" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+      </div>
     </div>
     <div class="slide">
       <h2>The Moment</h2>
       <p>At exactly 9:43 PM, I said (Love You Too) at 9:43pm... and my world changed forever ✨</p>
-      <button onclick="nextSlide()">Next</button>
+      <div class="btn-group">
+        <button class="secondary" onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+      <div class="slide-indicator">
+        <div class="dot" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot active" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+      </div>
     </div>
     <div class="slide">
       <h2>And So Much Love</h2>
-      <p>Born on 15/03/2005 👧🏻 and 29/07/2005 👦🏻, two souls started their journeys—destined to meet 🌌
-And on 31/05/2022 at 9:43 PM ⏰, the universe aligned and wrote our forever in the stars ✨
-Today marks 3 years of love 💑, laughter 😂, and growth 🌱 beside you.
-You are my always 💞, my safe place 🫂, my heart’s home 🏡
-Happy 3rd anniversary, my love 💖
-Here’s to a lifetime more of us ♾️🥂</p>
-      <button onclick="nextSlide()">Next</button>
+      <p>Born on 15/03/2005 👧🏻 and 29/07/2005 👦🏻, two souls started their journeys—destined to meet 🌌</p>
+      <p>And on 31/05/2022 at 9:43 PM ⏰, the universe aligned and wrote our forever in the stars ✨</p>
+      <p>Today marks 3 years of love 💑, laughter 😂, and growth 🌱 beside you.</p>
+      <p>You are my always 💞, my safe place 🫂, my heart's home 🏡</p>
+      <p>Happy 3rd anniversary, my love 💖</p>
+      <p>Here's to a lifetime more of us ♾️🥂</p>
+      <div class="btn-group">
+        <button class="secondary" onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+      <div class="slide-indicator">
+        <div class="dot" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot active" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+      </div>
     </div>
     <div class="slide">
       <h2>More to Come...</h2>
-      <p>This is just the beginning. We’re writing a forever love story, page by page. I’m so grateful for you.</p>
-      <button onclick="nextSlide()">Next</button>
+      <p>This is just the beginning. We're writing a forever love story, page by page.</p>
+      <p>I'm so grateful for you.</p>
+      <div class="btn-group">
+        <button class="secondary" onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+      <div class="slide-indicator">
+        <div class="dot" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot active" onclick="goToSlide(4)"></div>
+        <div class="dot" onclick="goToSlide(5)"></div>
+      </div>
     </div>
     <div class="slide">
       <h2>Forever Yours</h2>
-      <p>Love you always, Ishika. <br>— Vivek 💖</p>
+      <p>Love you always, Ishika.</p>
+      <p>— Vivek 💖</p>
+      <div class="btn-group">
+        <button class="secondary" onclick="prevSlide()">Previous</button>
+        <button onclick="resetSlides()">Start Again</button>
+      </div>
+      <div class="slide-indicator">
+        <div class="dot" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+        <div class="dot" onclick="goToSlide(3)"></div>
+        <div class="dot" onclick="goToSlide(4)"></div>
+        <div class="dot active" onclick="goToSlide(5)"></div>
+      </div>
     </div>
   </div>
 
   <div class="confetti" id="confetti"></div>
 
+  <div class="music-control" id="musicControl" onclick="toggleMusic()">
+    ♫
+  </div>
+
   <!-- Background Music -->
-  <audio id="bg-music" autoplay loop>
-    <source src="I love you (Full song) Bodyguard feat. Salman khan, Kareena Kapoor (mp3cut.net) (1).mp3" type="audio/mpeg">
+  <audio id="bg-music" loop>
+    <source src="love-song.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
   <script>
     let current = 0;
     const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
     const heart = document.getElementById('backgroundHeart');
+    const music = document.getElementById('bg-music');
+    const musicControl = document.getElementById('musicControl');
+    const bgImagesContainer = document.getElementById('backgroundImages');
+    let isMusicPlaying = false;
+    const totalImages = 35;
+    const imagesPerSlide = 6; // Number of images to show per slide
+    let rotatingImages = [];
+
+    // Initialize rotating images
+    function initRotatingImages() {
+      for (let i = 0; i < imagesPerSlide; i++) {
+        const img = document.createElement('img');
+        img.className = 'rotating-image';
+        img.style.display = 'none';
+        bgImagesContainer.appendChild(img);
+        rotatingImages.push(img);
+      }
+      updateBackgroundImages();
+      startImageRotation();
+    }
+
+    // Update background images based on current slide
+    function updateBackgroundImages() {
+      const startImgIndex = current * imagesPerSlide + 1;
+      
+      rotatingImages.forEach((img, index) => {
+        const imgNumber = (startImgIndex + index - 1) % totalImages + 1;
+        img.src = `slide${imgNumber}.jpg`;
+        img.style.display = 'block';
+        img.style.opacity = '0';
+        
+        // Fade in the new image
+        setTimeout(() => {
+          img.style.opacity = '0.7';
+        }, 50);
+      });
+    }
+
+    // Animate images in circular paths
+    function startImageRotation() {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const radius = Math.min(window.innerWidth, window.innerHeight) * 0.4;
+      const angles = Array.from({length: imagesPerSlide}, (_, i) => (i * (2 * Math.PI / imagesPerSlide)));
+      
+      function animate() {
+        const time = Date.now() / 2000; // Slow rotation
+        
+        rotatingImages.forEach((img, i) => {
+          const angle = angles[i] + time;
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+          const scale = 0.8 + Math.sin(angle * 2) * 0.2;
+          
+          img.style.transform = `translate(${x - 75}px, ${y - 75}px) scale(${scale})`;
+          img.style.zIndex = Math.floor(scale * 10);
+        });
+        
+        requestAnimationFrame(animate);
+      }
+      
+      animate();
+    }
+
+    function updateSlideIndicator() {
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === current);
+      });
+    }
+
+    function goToSlide(index) {
+      slides[current].classList.remove('active');
+      current = index;
+      slides[current].classList.add('active');
+      updateSlideIndicator();
+      updateBackgroundImages();
+      triggerHeartCelebration();
+    }
 
     function nextSlide() {
       if (current < slides.length - 1) {
-        slides[current].classList.remove('active');
-        current++;
-        slides[current].classList.add('active');
-        triggerHeartCelebration();
-        updateBackground();
+        goToSlide(current + 1);
       }
+    }
+
+    function prevSlide() {
+      if (current > 0) {
+        goToSlide(current - 1);
+      }
+    }
+
+    function resetSlides() {
+      goToSlide(0);
     }
 
     function triggerHeartCelebration() {
@@ -242,6 +468,17 @@ Here’s to a lifetime more of us ♾️🥂</p>
       }
     }
 
+    function toggleMusic() {
+      if (isMusicPlaying) {
+        music.pause();
+        musicControl.textContent = '♫';
+      } else {
+        music.play();
+        musicControl.textContent = '❚❚';
+      }
+      isMusicPlaying = !isMusicPlaying;
+    }
+
     function updateClock() {
       const startDate = new Date('2022-05-31T21:43:00');
       const now = new Date();
@@ -256,16 +493,27 @@ Here’s to a lifetime more of us ♾️🥂</p>
         `${days} Days, ${hours} Hours, ${minutes} Minutes, ${seconds} Seconds of Love 💞`;
     }
 
-    // Update the background image based on current slide
-    function updateBackground() {
-      const bg = document.getElementById('backgroundImage');
-      const imgNumber = current + 1; // slide1 = index 0
-      bg.style.backgroundImage = `url('slide${imgNumber}.jpg')`;
-    }
-
+    // Initialize
+    initRotatingImages();
+    updateSlideIndicator();
     setInterval(updateClock, 1000);
     updateClock();
-    updateBackground();
+
+    // Enable music after first interaction
+    document.body.addEventListener('click', function initMusic() {
+      if (!isMusicPlaying) {
+        music.play().catch(e => console.log('Autoplay prevented:', e));
+        isMusicPlaying = true;
+        musicControl.textContent = '❚❚';
+      }
+      document.body.removeEventListener('click', initMusic);
+    }, { once: true });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      // Recalculate positions for rotating images
+      startImageRotation();
+    });
   </script>
 </body>
 </html>
