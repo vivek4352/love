@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Love Story - Vivek & Ishika</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      background: #ffeef2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      padding-top: 200px;
+    }
+    .background-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: -1;
+      opacity: 0.25; /* subtle background */
+      transition: background-image 0.5s ease-in-out;
+    }
+    .background-heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 50vw;
+      color: #FF0000;
+      opacity: 0.50;
+      z-index: 0;
+      transition: transform 0.5s ease-in-out;
+    }
+    .background-heart.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .container {
+      background: white;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      width: 90%;
+      max-width: 500px;
+      padding: 2rem;
+      text-align: center;
+      z-index: 1;
+      position: relative;
+    }
+    .title-banner {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fad0c4);
+      padding: 1rem 2rem;
+      border-radius: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 0 15px #ff69b4;
+      animation: shine 2s infinite ease-in-out;
+      z-index: 10;
+    }
+    .clock {
+      position: fixed;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 1rem;
+      background: #fff0f5;
+      padding: 0.5rem 1.5rem;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #d63384;
+      box-shadow: 0 0 10px #f48fb1;
+      z-index: 9;
+    }
+    @keyframes shine {
+      0%, 100% {
+        box-shadow: 0 0 15px #ff69b4;
+      }
+      50% {
+        box-shadow: 0 0 30px #ff1493;
+      }
+    }
+    .slide {
+      display: none;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .slide.active {
+      display: block;
+    }
+    .slide h2 {
+      color: #d63384;
+      margin-bottom: 1rem;
+    }
+    .slide p {
+      font-size: 1.2rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      background: #d63384;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #b02a6b;
+    }
+    .confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #f06292;
+      animation: fall 2s linear infinite;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100vh); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background image container -->
+  <div id="backgroundImage" class="background-image"></div>
+
+  <div class="background-heart" id="backgroundHeart">❤️</div>
+
+  <div class="title-banner">💖 Happy 3rd Anniversary, Ishika! 💖</div>
+  <div class="clock" id="clock">Loading love timer...</div>
+
+  <div class="container">
+    <div class="slide active">
+      <h2>Hi Ishika ❤️</h2>
+      <p>This is something special for you... A little journey of us, one slide at a time 🥰</p>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+    <div class="slide">
+      <h2>Our Beginning</h2>
+      <p>It all began on 31st May 2022... the day you proposed to me ❤️(chalo aj apne best friend ko sabhi propros kro dekhte he unka answer kya Hota he) I Love U </p>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+    <div class="slide">
+      <h2>The Moment</h2>
+      <p>At exactly 9:43 PM, I said (Love You Too) at 9:43pm... and my world changed forever ✨</p>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+    <div class="slide">
+      <h2>And So Much Love</h2>
+      <p>Born on 15/03/2005 👧🏻 and 29/07/2005 👦🏻, two souls started their journeys—destined to meet 🌌
+And on 31/05/2022 at 9:43 PM ⏰, the universe aligned and wrote our forever in the stars ✨
+Today marks 3 years of love 💑, laughter 😂, and growth 🌱 beside you.
+You are my always 💞, my safe place 🫂, my heart’s home 🏡
+Happy 3rd anniversary, my love 💖
+Here’s to a lifetime more of us ♾️🥂</p>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+    <div class="slide">
+      <h2>More to Come...</h2>
+      <p>This is just the beginning. We’re writing a forever love story, page by page. I’m so grateful for you.</p>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+    <div class="slide">
+      <h2>Forever Yours</h2>
+      <p>Love you always, Ishika. <br>— Vivek 💖</p>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <!-- Background Music -->
+  <audio id="bg-music" autoplay loop>
+    <source src="I love you (Full song) Bodyguard feat. Salman khan, Kareena Kapoor (mp3cut.net) (1).mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const heart = document.getElementById('backgroundHeart');
+
+    function nextSlide() {
+      if (current < slides.length - 1) {
+        slides[current].classList.remove('active');
+        current++;
+        slides[current].classList.add('active');
+        triggerHeartCelebration();
+        updateBackground();
+      }
+    }
+
+    function triggerHeartCelebration() {
+      heart.classList.add('show');
+      setTimeout(() => heart.classList.remove('show'), 800);
+      triggerConfetti();
+    }
+
+    function triggerConfetti() {
+      const confettiContainer = document.getElementById('confetti');
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti-piece');
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 70%)`;
+        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        confetti.style.width = confetti.style.height = Math.random() * 8 + 4 + 'px';
+        confettiContainer.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }
+    }
+
+    function updateClock() {
+      const startDate = new Date('2022-05-31T21:43:00');
+      const now = new Date();
+      const diff = now - startDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('clock').textContent =
+        `${days} Days, ${hours} Hours, ${minutes} Minutes, ${seconds} Seconds of Love 💞`;
+    }
+
+    // Update the background image based on current slide
+    function updateBackground() {
+      const bg = document.getElementById('backgroundImage');
+      const imgNumber = current + 1; // slide1 = index 0
+      bg.style.backgroundImage = `url('slide${imgNumber}.jpg')`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    updateBackground();
+  </script>
+</body>
+</html>
